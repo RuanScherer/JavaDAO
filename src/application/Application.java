@@ -56,5 +56,13 @@ public class Application {
         } catch (DatabaseException exception) {
             System.out.println("Fail on update.");
         }
+
+        System.out.println("\n===== TEST 6: seller delete =====");
+        try {
+            sellerDAO.deleteById(seller.getId());
+            System.out.println("Seller deleted");
+        } catch (DatabaseException exception) {
+            System.out.println("Fail on delete.");
+        }
     }
 }
