@@ -37,18 +37,7 @@ public class SellerJDBC implements SellerDAO {
             statement.setDouble(4, seller.getBaseSalary());
             statement.setInt(5, seller.getDepartment().getId());
 
-            int affectedRows = statement.executeUpdate();
-
-            if (affectedRows > 0) {
-                ResultSet resultSet = statement.getGeneratedKeys();
-                if (resultSet.next()) {
-                    int id = resultSet.getInt(1);
-                    seller.setId(id);
-                }
-                Database.closeResultSet(resultSet);
-            } else {
-                throw new DatabaseException("Unexpected error. No rows affected.");
-            }
+            this.commonOperation(statement, seller);
         } catch (SQLException exception) {
             throw new DatabaseException(exception.getMessage());
         } finally {
@@ -58,7 +47,28 @@ public class SellerJDBC implements SellerDAO {
 
     @Override
     public void update(Seller seller) {
+        PreparedStatement statement = null;
+        try {
+            statement = this.connection.prepareStatement(
+                    "UPDATE seller "
+                            + "SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? "
+                            + "WHERE Id = ? ",
+                    Statement.RETURN_GENERATED_KEYS
+            );
 
+            statement.setString(1, seller.getName());
+            statement.setString(2, seller.getEmail());
+            statement.setDate(3, new Date(seller.getBirthDate().getTime()));
+            statement.setDouble(4, seller.getBaseSalary());
+            statement.setInt(5, seller.getDepartment().getId());
+            statement.setInt(6, seller.getId());
+
+            this.commonOperation(statement, seller);
+        } catch (SQLException exception) {
+            throw new DatabaseException(exception.getMessage());
+        } finally {
+            Database.closeStatement(statement);
+        }
     }
 
     @Override
@@ -136,6 +146,21 @@ public class SellerJDBC implements SellerDAO {
             throw new DatabaseException(exception.getMessage());
         } finally {
             Database.closeStatement(statement);
+        }
+    }
+
+    public void commonOperation(PreparedStatement statement, Seller seller) throws SQLException {
+        int affectedRows = statement.executeUpdate();
+
+        if (affectedRows > 0) {
+            ResultSet resultSet = statement.getGeneratedKeys();
+            if (resultSet.next()) {
+                int id = resultSet.getInt(1);
+                seller.setId(id);
+            }
+            Database.closeResultSet(resultSet);
+        } else {
+            throw new DatabaseException("Unexpected error. No rows affected.");
         }
     }
 

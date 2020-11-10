@@ -46,5 +46,15 @@ public class Application {
         } catch (DatabaseException exception) {
             System.out.println("Fail on insert.");
         }
+
+        System.out.println("\n===== TEST 5: seller update =====");
+        seller = sellerDAO.findById(2);
+        seller.setName("João");
+        try {
+            sellerDAO.update(seller);
+            System.out.println("Seller updated");
+        } catch (DatabaseException exception) {
+            System.out.println("Fail on update.");
+        }
     }
 }
