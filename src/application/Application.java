@@ -1,10 +1,12 @@
 package application;
 
+import exceptions.DatabaseException;
 import model.dao.DAOFactory;
 import model.dao.seller.SellerDAO;
 import model.entities.Department;
 import model.entities.Seller;
 
+import java.util.Date;
 import java.util.List;
 
 public class Application {
@@ -27,6 +29,22 @@ public class Application {
         sellerList = sellerDAO.findAll();
         for (Seller element : sellerList) {
             System.out.println(element);
+        }
+
+        System.out.println("\n===== TEST 4: seller insert =====");
+        seller = new Seller(
+                null,
+                "Ruan",
+                "ruan.vscherer@gmail.com",
+                new Date(),
+                2800.00,
+                department
+        );
+        try {
+            sellerDAO.insert(seller);
+            System.out.println("Seller inserted");
+        } catch (DatabaseException exception) {
+            System.out.println("Fail on insert.");
         }
     }
 }
