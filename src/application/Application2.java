@@ -16,5 +16,11 @@ public class Application2 {
         System.out.println("===== TEST 1: department findById =====");
         Department department = departmentDAO.findById(2);
         System.out.println(department);
+
+        System.out.println("===== TEST 1: department findAll =====");
+        List<Department> departmentList = departmentDAO.findAll();
+        for (Department element : departmentList) {
+            System.out.println(department);
+        }
     }
 }
