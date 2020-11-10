@@ -46,7 +46,31 @@ public class DepartmentJDBC implements DepartmentDAO {
 
     @Override
     public void update(Department department) {
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
 
+        try {
+            statement = this.connection.prepareStatement(
+                    "UPDATE department SET Name = ? WHERE Id = ?",
+                    Statement.RETURN_GENERATED_KEYS
+            );
+            statement.setString(1, department.getName());
+            statement.setInt(2, department.getId());
+
+            int affectedRows = statement.executeUpdate();
+            resultSet = statement.getGeneratedKeys();
+
+            if (affectedRows > 0) {
+                if (resultSet.next()) {
+                    department.setId(resultSet.getInt(1));
+                }
+            }
+        } catch (SQLException exception) {
+            throw new DatabaseException(exception.getMessage());
+        } finally {
+            Database.closeStatement(statement);
+            Database.closeResultSet(resultSet);
+        }
     }
 
     @Override
