@@ -22,5 +22,10 @@ public class Application2 {
         for (Department element : departmentList) {
             System.out.println(department);
         }
+
+        System.out.println("===== TEST 3: department insert =====");
+        department = new Department(null, "TI");
+        departmentDAO.insert(department);
+        System.out.println(department);
     }
 }
