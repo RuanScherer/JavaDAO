@@ -75,7 +75,26 @@ public class DepartmentJDBC implements DepartmentDAO {
 
     @Override
     public void deleteById(Integer id) {
+        PreparedStatement statement = null;
 
+        try {
+            statement = this.connection.prepareStatement(
+                    "DELETE FROM department WHERE Id = ?",
+                    Statement.RETURN_GENERATED_KEYS
+            );
+            statement.setInt(1, id);
+
+            int affectedRows = statement.executeUpdate();
+
+            if (affectedRows < 1) {
+                throw new DatabaseException("Can't remove department.");
+            }
+
+        } catch (SQLException exception) {
+            throw new DatabaseException(exception.getMessage());
+        } finally {
+            Database.closeStatement(statement);
+        }
     }
 
     @Override

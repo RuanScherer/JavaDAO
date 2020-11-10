@@ -33,5 +33,13 @@ public class Application2 {
         department.setName("Design");
         departmentDAO.update(department);
         System.out.println(department);
+
+        System.out.println("===== TEST 5: department deleteById =====");
+        try {
+            departmentDAO.deleteById(6);
+            System.out.println("Department deleted.");
+        } catch (DatabaseException exception) {
+            System.out.println("Fail on delete.");
+        }
     }
 }
