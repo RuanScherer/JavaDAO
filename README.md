@@ -14,7 +14,6 @@ This is a DAO project by Java course.
 #### Via direct download
 - Download the source code with the Github download button.
 - Extract the .zip file.
-- Open your terminal and browse to the directory.
 - Run the project using your Java IDE.
 
 #### Via terminal
